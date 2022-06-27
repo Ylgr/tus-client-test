@@ -1,24 +1,33 @@
 import * as tus from 'tus-js-client';
 import {useState} from "react";
 
+const VideoUploadType = {
+    postVideo: 'post_video',
+}
+
 function App() {
     let [upload, setUpload] = useState(null)
     let [totalByte, setTotalByte] = useState(0)
     let [currentByte, setCurrentByte] = useState(0)
-    let [currentPercent, setCurrentPercent] = useState(0)
+    let [currentPercent, setCurrentPercent] = useState('0')
 
     const fileChangedHandler = (e) => {
         const file = e.target.files[0]
         setUpload(new tus.Upload(file, {
             // Endpoint is the upload creation URL from your tus server
             endpoint: "http://localhost:3000/videos/resume",
-            // endpoint: "http://localhost:3000/tus/s3-store",
-            // Retry delays will enable tus-js-client to automatically retry on errors
-            retryDelays: [0, 3000, 5000, 10000, 20000],
-            // Attach additional meta data about the file for the server
+            // @ts-ignore
+            uploadLengthDeferred: false,
+            retryDelays: [0, 1000, 3000, 5000],
             metadata: {
-                filename: 'post/original/4bf51160-d053-4a96-a82e-151a64568ccf.mp4',
-                filetype: file.type
+                filename: file.name,
+                filetype: file.type,
+                upload_type: VideoUploadType.postVideo,
+                user_id: '15',
+                id: '76b0d3c2-2979-4855-81e3-71fcc410a64b'
+            },
+            headers: {
+                authorization: ''
             },
             // Callback for errors which cannot be fixed using retries
             onError: function (error) {
@@ -34,7 +43,8 @@ function App() {
             },
             // Callback for once the upload is completed
             onSuccess: function () {
-                console.log("Download %s from %s", upload.file.name, upload.url)
+                console.log("Upload success")
+
             }
         }))
     }
@@ -57,8 +67,7 @@ function App() {
                 // Start the upload
                 upload.start()
             })
-        }
-    }
+        }    }
 
     return (
         <div className="App">
