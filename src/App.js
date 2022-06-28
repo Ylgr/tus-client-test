@@ -21,10 +21,10 @@ function App() {
             retryDelays: [0, 1000, 3000, 5000],
             metadata: {
                 filename: file.name,
-                filetype: file.type,
+                mimetype: file.type,
                 upload_type: VideoUploadType.postVideo,
                 user_id: '15',
-                id: '1f361443-95bb-46e9-9c41-aa654719c0b9'
+                id: 'f7fed8a5-883c-4d37-88ca-a4bf3d0f5b36'
             },
             headers: {
                 authorization: ''
